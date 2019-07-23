@@ -2,6 +2,7 @@ import os,codecs,collections
 import ahocorasick
 from itertools import chain
 from py2neo import Graph,Node
+import jieba
 class QuestionClassifier:
     def __init__(self):
         #self.ask_rubbish_category = ["是什么","属于什么"]
@@ -87,7 +88,7 @@ class QuestionClassifier:
         return related_question 
     def classify(self, question):
         
-        data = {}
+        answer = []
         rubbish_dict = self.check_rubbish(question)
         if not rubbish_dict:
             related_question = self.related_question(question)
