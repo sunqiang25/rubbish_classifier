@@ -77,13 +77,22 @@ class QuestionClassifier:
             #if keyword in question:
                 #return True
         #return False  
-    
+    def related_question(self,question):
+        l_question = jieba.lcut(question)
+        related_question=[]
+        for i in l_question:
+            for k in self.rubbish:
+                if i in k:
+                    related_question.append(k)
+        return related_question 
     def classify(self, question):
         
         data = {}
         rubbish_dict = self.check_rubbish(question)
         if not rubbish_dict:
-            return {}
+            related_question = self.related_question(question)
+            if related_question:answer.append("您也许想问的是: {}".format("//".join(related_question)))
+            return answer
         types =rubbish_dict.keys()
         question_type = 'others'
         types_wd = "".join(chain(*rubbish_dict.values()))
@@ -98,7 +107,6 @@ class QuestionClassifier:
             question_type = "identified_rubbish_category"
             entities = list(rubbish_dict.values())[0]
         queries = self.query_transfer(question_type, entities)
-        answer = "垃圾分类机器人小强为您服务"
         result = []
         for query in queries:
             try:
@@ -114,16 +122,17 @@ class QuestionClassifier:
             return ''
         if question_type == "ask_rubbish_category":
             for i in answers:
-                final_answer.append("{0}是{1}".format(i['m.name'],i['r.name']))
+                final_answer.append("{0}属于{1}".format(i['m.name'],i['r.name']))
         if question_type == "rubbish_category_desc":
             final_answer.append(answers[0]["m.desc"])
             example=[]
             for i in answers[1:]:
                 example.append(i["m.name"])
-            final_answer.append(example)
+            answer = "常见的{0}有: {1}等".format(answers[0]["m.name"],"/".join(example))
+            final_answer.append(answer)
         if question_type == "identified_rubbish_category":
             for i in answers:
-                final_answer.append("{0}是{1}".format(i['m.name'],i['r.name']))
+                final_answer.append("{0}属于{1}哦".format(i['m.name'],i['r.name']))
         return final_answer
 
     def query_transfer(self, question_type, entities):
@@ -144,6 +153,7 @@ if __name__ == '__main__':
         question = input('input an question:')
         answer = handler.classify(question)
         if answer:
-            print(answer)
+            for i in answer:
+                print(i,)
         else:
-            print( "垃圾分类机器人小强还在学习中...")
+            print( "垃圾分类机器人小强还在学习中哦...")
