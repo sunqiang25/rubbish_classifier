@@ -34,13 +34,13 @@ class QuestionClassifier:
         self.rubbish_actree = self.build_rubbish_actree(list(self.rubbish_related))
         self.rubbish_wdtype_dict = self.build_rubbish_wdtype_dict()
         self.g = Graph(
-            host="10.37.2.247",
+            host="127.0.0.1",
             port="31423",
             bolt = True,
             user="neo4j",
             password="1qaz@WSX")            
         #self.g = Graph(
-            #host="10.37.2.247",
+            #host="127.0.0.1",
             #http_port=7474,
             #user="neo4j",
             #password="1qaz@WSX")        
@@ -119,10 +119,8 @@ class QuestionClassifier:
             if trash_name:
                 answers = [
                     '{}这么聪明，怎么会是垃圾呢？'.format(trash_name),
-                    '{}看起来不像来自地球，不会是太空垃圾吧？'.format(trash_name),
                     '{}这么机智，要说是也是高智商垃圾吧'.format(trash_name),
                     '为啥又有人问我这个问题...',
-                    '{}这么笨，被归属于垃圾，垃圾家族应该不会满意吧！！'.format(trash_name),
                     '{}看起来不像来自地球，不会是太空垃圾吧？'.format(trash_name),
                     '{}这么搞笑，或许是娱乐垃圾吧'.format(trash_name)                    
                 ]
